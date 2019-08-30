@@ -43,9 +43,9 @@ AADICT = {"ALA":"A",
           
 
 def print_header():
-    print "#############################################"
-    print "#                PDB2FASTA                  #"
-    print "#############################################"
+    print ("#############################################")
+    print ("#                PDB2FASTA                  #")
+    print ("#############################################")
 
 
 
@@ -105,7 +105,7 @@ def get_col_indices(collist):
     if num_cols == 10:
         return (4,-1)
 
-    print "Unexpected number of columns in PDB file - is this valid?"
+    print ("Unexpected number of columns in PDB file - is this valid?")
     raise Exception
     
 
@@ -232,7 +232,7 @@ def read_residues(content):
                     temp_res = []
                     temp_res.append(linelist)
                 else:
-                    print "ERROR"
+                    print ("ERROR")
                     raise pdb2fastaException("Found a residue with no atoms? LINE: " + line)
 
                 
@@ -272,25 +272,25 @@ if __name__=="__main__":
     if args.usage:
         print_header()
 
-        print " Usage:"
-        print " pdb2fasta -f <pdb file> # print protein sequence from PDB file"
-        print " pdb2fasta -c <pdb file> # print number and names of chains in file"
-        print " pdb2fasta -f <pdb file> -c <chain> # print protein sequence from chain <chain> in PDB file"
-        print " pdb2fasta -f <pdb file> [-c <chain>] -t # print three letter code instead of one letter code"
-        print " pdb2fasta -f <pdb file> [-c <chain>] -absinth # print a sequence using CAMPARI mode"
-        print ""
-        print " For additional help or bug reports see https://github.com/alexholehouse/pdb2fasta"
-        print " Version " + str(VERSION)
+        print (" Usage:")
+        print (" pdb2fasta -f <pdb file> # print protein sequence from PDB file")
+        print (" pdb2fasta -c <pdb file> # print number and names of chains in file")
+        print (" pdb2fasta -f <pdb file> -c <chain> # print protein sequence from chain <chain> in PDB file")
+        print (" pdb2fasta -f <pdb file> [-c <chain>] -t # print three letter code instead of one letter code")
+        print (" pdb2fasta -f <pdb file> [-c <chain>] -absinth # print a sequence using CAMPARI mode")
+        print ("")
+        print (" For additional help or bug reports see https://github.com/alexholehouse/pdb2fasta")
+        print (" Version " + str(VERSION))
         exit(0)
 
     if args.version:
-        print " Version " + str(VERSION)
+        print (" Version " + str(VERSION))
         exit(0)        
 
     if args.file:
         filename=args.file        
     elif args.chain:
-        print "In chain mode - counting number of chains"
+        print ("In chain mode - counting number of chains")
         filename=args.chain
         content = read_file(filename)
         residues = read_residues(content)
@@ -299,7 +299,7 @@ if __name__=="__main__":
         (resid_num,chain_num) = get_col_indices(residues[0][0])
         
         if chain_num == -1:
-            print "Unable to get chain number from PDB file"
+            print ("Unable to get chain number from PDB file")
         
         chaincount=0
         chaincurrent="-"
@@ -313,14 +313,14 @@ if __name__=="__main__":
                 chaincount=chaincount+1
                 chaincurrent=atom[chain_num]
                 chainlist.append(chaincurrent)
-        print "Number of chains: " + str(chaincount)
-        print "Chains are: " + str(chainlist)
+        print ("Number of chains: " + str(chaincount))
+        print ("Chains are: " + str(chainlist))
         exit(0)
             
             
     else:
         
-        print "[FATAL ERROR]: Please provide a filename (-f 'filename')"
+        print ("[FATAL ERROR]: Please provide a filename (-f 'filename')")
         exit(1)
 
 
@@ -336,7 +336,7 @@ if __name__=="__main__":
     if args.chain:        
 
         if chain_num == -1:
-            print "Unable to get chain number from PDB file"
+            print ("Unable to get chain number from PDB file")
     
         count=0
         for res in residues:
@@ -355,7 +355,7 @@ if __name__=="__main__":
                 # if want 3 letter output but NOT absinth format
                 if args.three and not args.absinth:                    
                     if count%20 == 0 and not count == 0:
-                        print ""
+                        print ("")
 
                     sys.stdout.write(outchar)
                     sys.stdout.write(" ")
@@ -368,7 +368,7 @@ if __name__=="__main__":
                 # want standard 1 letter FASTA format
                 else:
                     if count%50 == 0 and not count == 0:
-                        print ""
+                        print ("")
                     sys.stdout.write(three2one(outchar))
                     if count%10 == 0 and not count%50 == 0 and not count == 0:
                         sys.stdout.write(" ")
@@ -379,7 +379,7 @@ if __name__=="__main__":
         if args.absinth:
             sys.stdout.write("END\n")
         else:
-            print ""
+            print ("")
     else:        
 
         count=0
@@ -398,7 +398,7 @@ if __name__=="__main__":
 
             if args.three and not args.absinth and not args.oneline:
                 if count%20 == 0 and not count == 0:
-                    print ""
+                    print ("")
 
                 sys.stdout.write(outchar)
                 sys.stdout.write(" ")
@@ -407,13 +407,12 @@ if __name__=="__main__":
                 sys.stdout.write("\n")
             elif not args.oneline:
                 if count%50 == 0 and not count == 0:
-                    print ""
+                    print ("")
 
                 sys.stdout.write(three2one(outchar))
 
                 if count%10 == 0 and not count%50 == 0 and not count == 0 and not args.oneline:
                     sys.stdout.write(" ")
-                print ('here')
             if args.oneline:
                 sys.stdout.write(three2one(outchar))
                 count = count + 1
@@ -422,6 +421,6 @@ if __name__=="__main__":
         if args.absinth:
             sys.stdout.write("END\n")
         else:
-            print ""
+            print ("")
 
   
