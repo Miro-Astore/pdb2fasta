@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/miro/anaconda2/bin/python
 
 ## Alex Holehouse
 ## Pappulab
@@ -140,7 +140,15 @@ def three2one(aa):
 
 
 def splitPDBLine(line):
-    return line.replace('-', ' ').split()
+    lin_temp = line.replace('-', ' ').split()
+    if len(lin_temp[2]) > 3:
+        #we need this because sometimes the resname is too long so this split method will not work. e.g in multiple conformers have resnames like ASER instead of SER
+        atom_name = lin_temp[2][0:2]
+        resname = lin_temp[2][3:]
+        lin_temp.pop(2)
+        lin_temp.insert(1,atom_name)
+        lin_temp.insert(2,resname)
+    return lin_temp
     
 
 def read_residues(content):
@@ -207,7 +215,6 @@ def read_residues(content):
             # current_res then append this atom to the temp_res
             # list (think of the temp_res list as a list which holds a residue's
             # constitutive atoms  residue as it's built     
-
             if current_res == int(linelist[resid_num]):
                 temp_res.append(linelist)
 
@@ -258,6 +265,7 @@ if __name__=="__main__":
     parser.add_argument("--usage","-u", help="Print help and exit",action='store_true', default=False)
     parser.add_argument("--version","-v", help="Print version and exit",action='store_true', default=False)
     parser.add_argument("--absinth","-a",  help="Print sequence in CAMPARI sequence mode",action='store_true', default=False)
+    parser.add_argument("--oneline","-o",  help="Print AA sequence in FASTA format in one line without spaces",action='store_true', default=False)
 
     args = parser.parse_args()
 
@@ -387,7 +395,8 @@ if __name__=="__main__":
                 sys.stderr.write("Found non-amino acid residue in PDB file... [" + str(atom[resname_num]) + "]\n")
                 continue
 
-            if args.three and not args.absinth:
+
+            if args.three and not args.absinth and not args.oneline:
                 if count%20 == 0 and not count == 0:
                     print ""
 
@@ -396,14 +405,18 @@ if __name__=="__main__":
             elif args.absinth:
                 sys.stdout.write(outchar)
                 sys.stdout.write("\n")
-            else:
+            elif not args.oneline:
                 if count%50 == 0 and not count == 0:
                     print ""
 
                 sys.stdout.write(three2one(outchar))
 
-                if count%10 == 0 and not count%50 == 0 and not count == 0:
+                if count%10 == 0 and not count%50 == 0 and not count == 0 and not args.oneline:
                     sys.stdout.write(" ")
+                print ('here')
+            if args.oneline:
+                sys.stdout.write(three2one(outchar))
+                count = count + 1
 
             count=count+1
         if args.absinth:
